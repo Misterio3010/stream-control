@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StreamControl - Gestión de Suscripciones</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        [x-cloak] { display: none !important; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .border-l-green-500 { border-left-width: 4px; }
+        .border-l-yellow-500 { border-left-width: 4px; }
+        .border-l-red-500 { border-left-width: 4px; }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen" x-data="streamApp()">
+
+    <!-- PANTALLA DE INICIO DE SESIÓN (LOGIN) -->
+    <div x-show="!isLoggedIn" x-cloak class="flex items-center justify-center h-screen p-4">
+        <div class="bg-slate-800 p-8 rounded-3xl shadow-2xl w-full max-w-md text-center border border-slate-700">
+            <h1 class="text-3xl font-extrabold text-white mb-2 tracking-tight">Stream<span class="text-green-500">Control</span></h1>
+            <p class="text-slate-400 mb-6 text-sm">Selecciona tu perfil de acceso</p>
+            
+            <div class="space-y-4">
+                <!-- Perfil Zegarra -->
+                <div class="bg-slate-900 p-4 rounded-2xl border border-slate-700 text-left">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-12 h-12 bg-green-600 text-white font-bold text-xl rounded-full flex items-center justify-center shadow-md">Z</div>
+                        <div>
+                            <div class="font-bold text-white text-lg">Zegarra</div>
+                            <div class="text-xs text-slate-400">Espacio de gestión independiente</div>
+                        </div>
+                    </div>
+                    <form @submit.prevent="login('Zegarra', passZ)" class="flex gap-2">
+                        <input type="password" x-model="passZ" placeholder="Contraseña" required class="flex-grow bg-slate-800 border border-slate-700 text-slate-200 px-3 py-2 rounded-xl text-sm focus:ring-2 focus:ring-green-500 outline-none">
+                        <button type="submit" class="bg-green-600 hover:bg-green-500 text-white font-semibold px-4 py-2 rounded-xl text-sm transition">Entrar</button>
+                    </form>
+                </div>
+
+                <!-- Perfil Mejia -->
+                <div class="bg-slate-900 p-4 rounded-2xl border border-slate-700 text-left">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-12 h-12 bg-sky-600 text-white font-bold text-xl rounded-full flex items-center justify-center shadow-md">M</div>
+                        <div>
+                            <div class="font-bold text-white text-lg">Mejia</div>
+                            <div class="text-xs text-slate-400">Espacio de gestión independiente</div>
+                        </div>
+                    </div>
+                    <form @submit.prevent="login('Mejia', passM)" class="flex gap-2">
+                        <input type="password" x-model="passM" placeholder="Contraseña" required class="flex-grow bg-slate-800 border border-slate-700 text-slate-200 px-3 py-2 rounded-xl text-sm
+                                                                                                                                  
