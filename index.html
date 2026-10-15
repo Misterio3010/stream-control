@@ -3,76 +3,278 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StreamControl</title>
+    <title>StreamControl - Gestión</title>
     <style>
-        body { background: #0f172a; color: #fff; font-family: sans-serif; padding: 20px; margin: 0; }
-        .box { background: #1e293b; padding: 20px; border-radius: 12px; max-width: 400px; margin: 40px auto; border: 1px solid #334155; }
-        input, select { width: 100%; padding: 10px; margin: 8px 0; background: #0f172a; border: 1px solid #475569; color: #fff; border-radius: 6px; box-sizing: border-box; }
-        button { background: #22c55e; color: #fff; border: none; padding: 10px; width: 100%; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        .hidden { display: none; }
-        .flex { display: flex; justify-content: space-between; align-items: center; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
+        body { background: #0f172a; color: #f8fafc; padding: 16px; min-height: 100vh; }
+        .container { max-width: 700px; margin: 0 auto; }
+        .card { background: #1e293b; border: 1px solid #334155; border-radius: 14px; padding: 16px; margin-bottom: 14px; }
+        h1, h2 { font-weight: 800; margin-bottom: 8px; }
+        .btn { background: #16a34a; color: white; border: none; padding: 10px 14px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 14px; }
+        .btn-danger { background: #7f1d1d; color: #fca5a5; }
+        .btn-sec { background: #475569; color: white; }
+        input, select { width: 100%; background: #0f172a; border: 1px solid #475569; color: white; padding: 10px; border-radius: 8px; margin-bottom: 10px; font-size: 14px; }
+        .hidden { display: none !important; }
+        .flex { display: flex; gap: 8px; align-items: center; justify-content: space-between; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 16px; text-align: center; }
+        .stat-card { background: #1e293b; border: 1px solid #334155; padding: 12px; border-radius: 10px; }
+        .stat-num { font-size: 18px; font-weight: bold; margin-top: 4px; }
     </style>
 </head>
 <body>
 
-    <!-- LOGIN -->
-    <div id="loginView" class="box">
-        <h2>StreamControl</h2>
-        <p style="color: #94a3b8; font-size: 14px; margin-bottom: 15px;">Selecciona tu perfil</p>
-        
-        <div style="margin-bottom: 15px;">
-            <strong>Perfil: Zegarra</strong>
-            <input type="password" id="pZ" placeholder="Contraseña (1234)">
-            <button onclick="entrar('Zegarra', 'pZ', '1234')">Ingresar como Zegarra</button>
+    <div class="container">
+        <!-- LOGIN -->
+        <div id="loginScreen" class="card" style="max-width: 380px; margin: 60px auto; text-align: center;">
+            <h2>Stream<span style="color: #22c55e;">Control</span></h2>
+            <p style="color: #94a3b8; font-size: 13px; margin-bottom: 15px;">Selecciona tu perfil de acceso</p>
+            
+            <div style="background: #0f172a; padding: 12px; border-radius: 10px; margin-bottom: 12px; text-align: left; border: 1px solid #334155;">
+                <div style="font-weight: bold; margin-bottom: 6px;">👤 Zegarra</div>
+                <input type="password" id="passZ" placeholder="Contraseña (1234)">
+                <button class="btn" onclick="login('Zegarra', 'passZ', '1234')" style="width: 100%;">Entrar como Zegarra</button>
+            </div>
+
+            <div style="background: #0f172a; padding: 12px; border-radius: 10px; text-align: left; border: 1px solid #334155;">
+                <div style="font-weight: bold; margin-bottom: 6px;">👤 Mejia</div>
+                <input type="password" id="passM" placeholder="Contraseña (5678)">
+                <button class="btn" onclick="login('Mejia', 'passM', '5678')" style="width: 100%; background: #0284c7;">Entrar como Mejia</button>
+            </div>
         </div>
 
-        <div>
-            <strong>Perfil: Mejia</strong>
-            <input type="password" id="pM" placeholder="Contraseña (5678)">
-            <button onclick="entrar('Mejia', 'pM', '5678')" style="background: #0284c7;">Ingresar como Mejia</button>
-        </div>
-    </div>
+        <!-- MAIN APP -->
+        <div id="appScreen" class="hidden">
+            <div class="flex" style="margin-bottom: 16px;">
+                <div>
+                    <h2>Stream<span style="color: #22c55e;">Control</span></h2>
+                    <p style="font-size: 12px; color: #94a3b8;">Perfil: <strong id="userTitle" style="color:white;"></strong></p>
+                </div>
+                <div>
+                    <button class="btn btn-sec" onclick="logout()" style="padding: 8px 10px; font-size: 12px;">Salir</button>
+                    <button class="btn" onclick="openModal()" style="padding: 8px 10px; font-size: 12px;">+ Venta</button>
+                </div>
+            </div>
 
-    <!-- PANEL PRINCIPAL -->
-    <div id="appView" class="hidden box" style="max-width: 600px;">
-        <div class="flex">
-            <h3>Panel de <span id="lblUser" style="color: #22c55e;"></span></h3>
-            <button onclick="salir()" style="background: #ef4444; width: auto; padding: 6px 12px;">Salir</button>
+            <!-- STATS -->
+            <div class="stats">
+                <div class="stat-card">
+                    <div style="font-size: 11px; color: #94a3b8;">Clientes</div>
+                    <div class="stat-num" id="statClients">0</div>
+                </div>
+                <div class="stat-card">
+                    <div style="font-size: 11px; color: #94a3b8;">Ventas (S/)</div>
+                    <div class="stat-num" style="color: #22c55e;" id="statSales">0.00</div>
+                </div>
+                <div class="stat-card">
+                    <div style="font-size: 11px; color: #94a3b8;">Ganancia</div>
+                    <div class="stat-num" style="color: #38bdf8;" id="statProfit">0.00</div>
+                </div>
+            </div>
+
+            <!-- LIST -->
+            <div id="clientList"></div>
         </div>
-        <p style="color: #94a3b8; font-size: 13px; margin-top: 5px;">¡Bienvenido a tu sistema de gestión de streaming!</p>
-        <hr style="border: 0; border-top: 1px solid #334155; margin: 15px 0;">
-        <button onclick="alert('Próximo botón de registro de ventas activo')">+ Registrar Venta</button>
+
+        <!-- MODAL -->
+        <div id="modal" class="hidden" style="position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); display:flex; align-items:center; justify-content:center; padding: 16px; z-index: 100;">
+            <div class="card" style="width: 100%; max-width: 420px; background: #1e293b; max-height: 90vh; overflow-y: auto;">
+                <h3 id="modalTitle" style="margin-bottom: 12px;">Registrar Venta</h3>
+                <input type="hidden" id="clientId">
+                
+                <label style="font-size: 11px; color: #94a3b8;">Cliente</label>
+                <input type="text" id="clientName" placeholder="Nombre completo">
+                
+                <label style="font-size: 11px; color: #94a3b8;">Celular WhatsApp</label>
+                <input type="tel" id="clientPhone" placeholder="912345678">
+
+                <label style="font-size: 11px; color: #94a3b8;">Correo / Cuenta</label>
+                <input type="text" id="clientEmail" placeholder="correo@gmail.com">
+
+                <div class="grid">
+                    <div>
+                        <label style="font-size: 11px; color: #94a3b8;">Plataforma</label>
+                        <select id="clientPlatform">
+                            <option value="Netflix">Netflix</option>
+                            <option value="Disney+">Disney+</option>
+                            <option value="Max">Max</option>
+                            <option value="Prime Video">Prime Video</option>
+                            <option value="Combo / Otro">Combo / Otro</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="font-size: 11px; color: #94a3b8;">Vencimiento</label>
+                        <input type="date" id="clientExpiry">
+                    </div>
+                </div>
+
+                <div class="grid">
+                    <div>
+                        <label style="font-size: 11px; color: #94a3b8;">Precio Venta (S/)</label>
+                        <input type="number" step="0.01" id="clientSale" placeholder="30.00">
+                    </div>
+                    <div>
+                        <label style="font-size: 11px; color: #94a3b8;">Costo (S/)</label>
+                        <input type="number" step="0.01" id="clientCost" placeholder="15.00">
+                    </div>
+                </div>
+
+                <div class="flex" style="margin-top: 10px;">
+                    <button class="btn" onclick="saveClient()" style="flex:1;">Guardar</button>
+                    <button class="btn btn-sec" onclick="closeModal()" style="flex:1;">Cancelar</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
-        function verificar() {
-            let user = localStorage.getItem('sc_user');
-            if (user) {
-                document.getElementById('loginView').classList.add('hidden');
-                document.getElementById('appView').classList.remove('hidden');
-                document.getElementById('lblUser').innerText = user;
+        let currentUser = localStorage.getItem('sc_user');
+        let clients = [];
+
+        function checkAuth() {
+            if (currentUser) {
+                document.getElementById('loginScreen').classList.add('hidden');
+                document.getElementById('appScreen').classList.remove('hidden');
+                document.getElementById('userTitle').innerText = currentUser;
+                loadClients();
             } else {
-                document.getElementById('loginView').classList.remove('hidden');
-                document.getElementById('appView').classList.add('hidden');
+                document.getElementById('loginScreen').classList.remove('hidden');
+                document.getElementById('appScreen').classList.add('hidden');
             }
         }
 
-        function entrar(nombre, idInput, claveCorrecta) {
-            let val = document.getElementById(idInput).value;
-            if (val === claveCorrecta) {
-                localStorage.setItem('sc_user', nombre);
-                verificar();
+        function login(user, inputId, correctPass) {
+            let val = document.getElementById(inputId).value;
+            if (val === correctPass) {
+                localStorage.setItem('sc_user', user);
+                currentUser = user;
+                checkAuth();
             } else {
                 alert('Contraseña incorrecta');
             }
         }
 
-        function salir() {
+        function logout() {
             localStorage.removeItem('sc_user');
-            verificar();
+            currentUser = null;
+            checkAuth();
         }
 
-        verificar();
+        function loadClients() {
+            let data = localStorage.getItem('sc_data_' + currentUser);
+            clients = data ? JSON.parse(data) : [];
+            render();
+        }
+
+        function saveClients() {
+            localStorage.setItem('sc_data_' + currentUser, JSON.stringify(clients));
+            render();
+        }
+
+        function render() {
+            let list = document.getElementById('clientList');
+            list.innerHTML = '';
+            let totalS = 0, totalP = 0;
+
+            if (clients.length === 0) {
+                list.innerHTML = '<div class="card" style="text-align:center; color:#94a3b8; font-size:13px;">No hay ventas registradas en este perfil. ¡Pulsa "+ Venta" para agregar una!</div>';
+            }
+
+            clients.forEach(c => {
+                let sale = parseFloat(c.sale) || 0;
+                let cost = parseFloat(c.cost) || 0;
+                totalS += sale;
+                totalP += (sale - cost);
+
+                list.innerHTML += `
+                    <div class="card" style="border-left: 4px solid #22c55e;">
+                        <div class="flex" style="margin-bottom: 6px;">
+                            <strong>${c.name}</strong>
+                            <span style="background: #334155; padding: 2px 6px; border-radius: 4px; font-size: 11px;">${c.platform}</span>
+                        </div>
+                        <div style="font-size: 12px; color: #94a3b8; margin-bottom: 4px;">📧 ${c.email}</div>
+                        <div style="font-size: 12px; color: #94a3b8; margin-bottom: 10px;">📅 Vence: ${c.expiry} | Venta: S/ ${sale.toFixed(2)} (Ganancia: S/ ${(sale-cost).toFixed(2)})</div>
+                        <div class="flex">
+                            <a href="https://wa.me/51${c.phone}?text=Hola%20${encodeURIComponent(c.name)},%20tu%20cuenta%20de%20${encodeURIComponent(c.platform)}%20está%20por%20vencer." target="_blank" class="btn" style="background: #16a34a; text-decoration: none; font-size: 11px; padding: 6px 10px;">WhatsApp</a>
+                            <div>
+                                <button class="btn btn-sec" onclick="openModal(${c.id})" style="font-size: 11px; padding: 6px 10px;">Editar</button>
+                                <button class="btn btn-danger" onclick="deleteClient(${c.id})" style="font-size: 11px; padding: 6px 10px;">Eliminar</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            document.getElementById('statClients').innerText = clients.length;
+            document.getElementById('statSales').innerText = totalS.toFixed(2);
+            document.getElementById('statProfit').innerText = totalP.toFixed(2);
+        }
+
+        function openModal(id = null) {
+            document.getElementById('modal').classList.remove('hidden');
+            if (id) {
+                let c = clients.find(x => x.id === id);
+                document.getElementById('modalTitle').innerText = 'Editar Venta';
+                document.getElementById('clientId').value = c.id;
+                document.getElementById('clientName').value = c.name;
+                document.getElementById('clientPhone').value = c.phone;
+                document.getElementById('clientEmail').value = c.email;
+                document.getElementById('clientPlatform').value = c.platform;
+                document.getElementById('clientExpiry').value = c.expiry;
+                document.getElementById('clientSale').value = c.sale;
+                document.getElementById('clientCost').value = c.cost;
+            } else {
+                document.getElementById('modalTitle').innerText = 'Registrar Venta';
+                document.getElementById('clientId').value = '';
+                document.getElementById('clientName').value = '';
+                document.getElementById('clientPhone').value = '';
+                document.getElementById('clientEmail').value = '';
+                document.getElementById('clientExpiry').value = new Date().toISOString().split('T')[0];
+                document.getElementById('clientSale').value = '';
+                document.getElementById('clientCost').value = '';
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.add('hidden');
+        }
+
+        function saveClient() {
+            let id = document.getElementById('clientId').value;
+            let newItem = {
+                id: id ? Number(id) : Date.now(),
+                name: document.getElementById('clientName').value,
+                phone: document.getElementById('clientPhone').value,
+                email: document.getElementById('clientEmail').value,
+                platform: document.getElementById('clientPlatform').value,
+                expiry: document.getElementById('clientExpiry').value,
+                sale: document.getElementById('clientSale').value,
+                cost: document.getElementById('clientCost').value
+            };
+
+            if (!newItem.name || !newItem.phone) {
+                alert('Por favor completa al menos el nombre y el celular.');
+                return;
+            }
+
+            if (id) {
+                clients = clients.map(x => x.id == id ? newItem : x);
+            } else {
+                clients.push(newItem);
+            }
+
+            saveClients();
+            closeModal();
+        }
+
+        function deleteClient(id) {
+            if (confirm('¿Deseas eliminar este registro?')) {
+                clients = clients.filter(x => x.id !== id);
+                saveClients();
+            }
+        }
+
+        checkAuth();
     </script>
 </body>
 </html>
